@@ -23,17 +23,6 @@ Meteor.startup(() => {
 });
 
 WebApp.connectHandlers.use(connectRoute(function (router) {
-  router.get('/profile/:username', function (req, res, next) {
-    let user = Accounts.users.findOne({ username: req.params.username });
-    if (user) {
-      res.writeHead(200);
-      res.end(JSON.stringify(user));
-    } else {
-      res.writeHead(404);
-      res.end('No profile found with username ' + req.params.username);
-    }
-  });
-
   router.post('/profile/', function (req, res, next) {
     if (req.headers) {
       let headers = req.headers;
@@ -45,10 +34,11 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
         !headers.profile_day ||
         !headers.profile_month ||
         !headers.profile_year ||
-        !headers.profile_gender) {
+        !headers.profile_gender ||
+        !headers.profile_role) {
         res.writeHead(400);
         res.end('Operation needs firstname, lastname, ' +
-        'username, email, password, day, month, year and gender.');
+        'username, email, password, day, month, year, gender and role.');
         return;
       }
 
@@ -61,7 +51,8 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
         day: headers.profile_day,
         month: headers.profile_month,
         year: headers.profile_year,
-        gender: headers.profile_gender
+        gender: headers.profile_gender,
+        role: headers.profile_role
       });
 
       res.writeHead(200);
@@ -69,7 +60,35 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
     }
   });
 
-  // for logout: Accounts._clearAllLoginTokens(userId)
+  router.get('/profile/:username', function (req, res, next) {
+    let user = Accounts.users.findOne({ username: req.params.username });
+    if (user) {
+      res.writeHead(200);
+      res.end(JSON.stringify(user));
+    } else {
+      res.writeHead(404);
+      res.end('No profile found with username ' + req.params.username);
+    }
+  });
+
+  router.get('/students/', function (req, res, next) {
+    let students = Accounts.users.find({ role: 'student' }).fetch();
+    if (students) {
+      res.writeHead(200);
+      res.end(JSON.stringify(students.map(function(student) {
+        return {
+          userId: student._id,
+          firstname: student.firstname,
+          lastname: student.lastname,
+          gender: student.gender
+        };
+      })));
+    } else {
+      res.writeHead(404);
+      res.end('No students found');
+    }
+  });
+
   router.post('/login/', function (req, res, next) {
     if (req.headers) {
       let headers = req.headers;
@@ -158,5 +177,6 @@ Accounts.onCreateUser((options, user) => {
   user.month = options.month;
   user.year = options.year;
   user.gender = options.gender;
+  user.role = options.role;
   return user;
 });
