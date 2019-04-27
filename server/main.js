@@ -7,7 +7,6 @@ import {
 import connectRoute from 'connect-route';
 
 Meteor.startup(() => {
-
   let userCount = Accounts.users.find({}).fetch().length;
   if (userCount < 1) {
     console.log('No users yet!');
@@ -70,6 +69,7 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
     }
   });
 
+  // for logout: Accounts._clearAllLoginTokens(userId)
   router.post('/login/', function (req, res, next) {
     if (req.headers) {
       let headers = req.headers;
@@ -89,6 +89,55 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
         } else {
           res.writeHead(200);
           res.end(result.userId);
+          let loginToken = Accounts._generateStampedLoginToken();
+          Accounts._insertLoginToken(user._id, loginToken);
+        }
+      } else {
+        res.writeHead(404);
+        res.end('User not found');
+        return;
+      }
+    }
+  });
+
+  router.post('/logout/', function (req, res, next) {
+    if (req.headers) {
+      let headers = req.headers;
+      if (!headers.profile_userid) {
+        res.writeHead(400);
+        res.end('Operation needs userId');
+        return;
+      }
+
+      let user = Accounts.users.findOne({ _id: headers.profile_userid });
+      if (user) {
+        let result = Accounts._clearAllLoginTokens(headers.profile_userid);
+        res.writeHead(200);
+        res.end(JSON.stringify(result));
+      } else {
+        res.writeHead(404);
+        res.end('User not found');
+        return;
+      }
+    }
+  });
+
+  router.get('/loggedin/', function (req, res, next) {
+    if (req.headers) {
+      let headers = req.headers;
+      if (!headers.profile_userid) {
+        res.writeHead(400);
+        res.end('Operation needs userId');
+        return;
+      }
+
+      let user = Accounts.users.findOne({ _id: headers.profile_userid });
+      if (user) {
+        res.writeHead(200);
+        if (user.services.resume.loginTokens) {
+          res.end('' + user.services.resume.loginTokens.length);
+        } else {
+          res.end('0');
         }
       } else {
         res.writeHead(404);
