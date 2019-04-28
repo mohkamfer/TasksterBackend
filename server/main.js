@@ -26,24 +26,20 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
   router.post('/profile', function (req, res, next) {
     if (req.headers) {
       let headers = req.headers;
-      if (!headers.profile_firstname ||
-        !headers.profile_lastname ||
-        !headers.profile_username ||
+      if (!headers.profile_name ||
         !headers.profile_email ||
         !headers.profile_password ||
         !headers.profile_age ||
         !headers.profile_gender ||
         !headers.profile_role) {
         res.writeHead(400);
-        res.end('Operation needs firstname, lastname, ' +
-        'username, email, password, age, gender and role.');
+        res.end('Operation needs name, ' +
+        'email, password, age, gender and role.');
         return;
       }
 
       Accounts.createUser({
-        firstname: headers.profile_firstname,
-        lastname: headers.profile_lastname,
-        username: headers.profile_username,
+        name: headers.profile_name,
         email: headers.profile_email,
         password: headers.profile_password,
         age: headers.profile_age,
@@ -74,8 +70,7 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
       res.end(JSON.stringify(students.map(function(student) {
         return {
           userId: student._id,
-          firstname: student.firstname,
-          lastname: student.lastname,
+          name: student.name,
           gender: student.gender
         };
       })));
@@ -240,8 +235,7 @@ var examTemplate = {
   results: [
     { // Student Result Object
       studentId: 'ABCD', // userId for student
-      firstname: 'Mdohas',
-      lastname: 'Nofal',
+      name: 'Mdohas',
       questions: [
         {
           type: '1',
@@ -260,9 +254,7 @@ var examTemplate = {
 };
 
 Accounts.onCreateUser((options, user) => {
-  user.firstname = options.firstname;
-  user.lastname = options.lastname;
-  user.username = options.username;
+  user.name = options.name;
   user.email = options.email;
   user.password = options.password;
   user.age = options.age;
