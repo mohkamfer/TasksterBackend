@@ -31,14 +31,12 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
         !headers.profile_username ||
         !headers.profile_email ||
         !headers.profile_password ||
-        !headers.profile_day ||
-        !headers.profile_month ||
-        !headers.profile_year ||
+        !headers.profile_age ||
         !headers.profile_gender ||
         !headers.profile_role) {
         res.writeHead(400);
         res.end('Operation needs firstname, lastname, ' +
-        'username, email, password, day, month, year, gender and role.');
+        'username, email, password, age, gender and role.');
         return;
       }
 
@@ -48,9 +46,7 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
         username: headers.profile_username,
         email: headers.profile_email,
         password: headers.profile_password,
-        day: headers.profile_day,
-        month: headers.profile_month,
-        year: headers.profile_year,
+        age: headers.profile_age,
         gender: headers.profile_gender,
         role: headers.profile_role
       });
@@ -269,9 +265,7 @@ Accounts.onCreateUser((options, user) => {
   user.username = options.username;
   user.email = options.email;
   user.password = options.password;
-  user.day = options.day;
-  user.month = options.month;
-  user.year = options.year;
+  user.age = options.age;
   user.gender = options.gender;
   user.role = options.role;
   return user;
