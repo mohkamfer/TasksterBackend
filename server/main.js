@@ -98,7 +98,14 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
           res.end('' + result.error);
         } else {
           res.writeHead(200);
-          res.end(result.userId);
+          res.end(JSON.stringify({
+            _id: user._id,
+            email: user.emails[0].address,
+            name: user.name,
+            gender: user.gender,
+            age: user.age,
+            role: user.role
+          }));
           let loginToken = Accounts._generateStampedLoginToken();
           Accounts._insertLoginToken(user._id, loginToken);
         }
