@@ -274,10 +274,15 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
   router.get('/results/:id', function (req, res, next) {
     let exams = Exams.find({ "results.studentId": req.params.id }).fetch();
     if (exams) {
+      let results = [];
+      for (let i = 0; i < exams.length; ++i) {
+        let exam = exams[i];
+        if (exam.results) {
+          results.push(exam.results);
+        }
+      }
       res.writeHead(200);
-      res.end(JSON.stringify(exams.reduce(function (a, b) {
-        return a.results.concat(b.results);
-      })));
+      res.end(JSON.stringify(results));
     } else {
       res.writeHead(404);
       res.end('Exam not found');
