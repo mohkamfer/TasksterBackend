@@ -276,7 +276,7 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
     if (exams) {
       res.writeHead(200);
       res.end(JSON.stringify(exams.reduce(function (a, b) {
-        return a.concat(b);
+        return a.results.concat(b.results);
       })));
     } else {
       res.writeHead(404);
