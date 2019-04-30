@@ -71,7 +71,8 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
         return {
           userId: student._id,
           name: student.name,
-          gender: student.gender
+          gender: student.gender,
+          age: student.age
         };
       })));
     } else {
