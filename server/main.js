@@ -277,8 +277,6 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
       res.writeHead(200);
       res.end(JSON.stringify(exams.reduce(function (a, b) {
         return a.concat(b);
-      }).filter(function (obj) {
-        return obj.studentId == req.params.id
       })));
     } else {
       res.writeHead(404);
