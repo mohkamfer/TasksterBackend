@@ -274,9 +274,12 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
   router.get('/results/:id', function (req, res, next) {
     let exams = Exams.find({ "results.studentId": req.params.id }).fetch();
     if (exams) {
-      let results = exams.reduce((a,b) => { return a.concat(b); });
       res.writeHead(200);
-      res.end(JSON.stringify(results.filter(result => result.studentId == req.params.id)));
+      res.end(JSON.stringify(exams.reduce(function (a, b) {
+        return a.concat(b);
+      }).filter(function (obj) {
+        return obj.studentId == req.params.id
+      })));
     } else {
       res.writeHead(404);
       res.end('Exam not found');
