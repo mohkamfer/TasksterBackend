@@ -272,7 +272,7 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
   });
 
   router.get('/results/:id', function (req, res, next) {
-    let exams = Exams.find({ questions.results.studentId: req.params.id }).fetch();
+    let exams = Exams.find({ "questions.results.studentId": req.params.id }).fetch();
     if (exam) {
       res.writeHead(JSON.stringify(exams));
       res.end(JSON.stringify(exam));
