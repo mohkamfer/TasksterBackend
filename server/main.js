@@ -280,10 +280,10 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
         let examResults = exams[i].results;
         for (let j = 0; j < examResults.length; ++j) {
           let score = 0;
-          let resultQuestion = examResults[j].questions;
-          for (let k = 0; k < resultQuestion.length; ++k) {
-            let defaultAnswer = resultQuestion.default;
-            let studentAnswer = resultQuestion.answer;
+          let resultQuestions = examResults[j].questions;
+          for (let k = 0; k < resultQuestions.length; ++k) {
+            let defaultAnswer = resultQuestions[k].default;
+            let studentAnswer = resultQuestions[k].answer;
             if (defaultAnswer == studentAnswer) {
               score = score + 1;
             }
@@ -292,7 +292,7 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
           results.push({
             title: examTitle,
             score: score,
-            questionCount: resultQuestion.length
+            questionCount: resultQuestions.length
           });
           score = 0;
         }
