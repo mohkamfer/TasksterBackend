@@ -278,7 +278,7 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
       for (let i = 0; i < exams.length; ++i) {
         let exam = exams[i];
         if (exam.results) {
-          results.push(exam.results);
+          results.concat(exam.results);
         }
       }
       res.writeHead(200);
