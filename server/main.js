@@ -276,19 +276,25 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
     if (exams) {
       let results = [];
       for (let i = 0; i < exams.length; ++i) {
-        let exam = exams[i];
-        let currentResults = [];
-        for (let j = 0; j < exam.results.length; ++j) {
-          if (exam.results[j].studentId == req.params.id) {
-            currentResults.push(exam.results[j]);
+        let examTitle = exams[i].title;
+        let examResults = exams[i].results;
+        for (let j = 0; j < examResults.length; ++j) {
+          let score = 0;
+          let resultQuestion = examResults[j].questions;
+          for (let k = 0; k < resultQuestion.length; ++k) {
+            let defaultAnswer = resultQuestion.default;
+            let studentAnswer = resultQuestion.answer;
+            if (defaultAnswer == studentAnswer) {
+              score = score + 1;
+            }
           }
-        }
 
-        results.push({
-          examId: exam._id,
-          examTitle: exam.title,
-          results: currentResults
-        });
+          results.push({
+            title: examTitle,
+            score: score,
+            questionCount: resultQuestion.length
+          });
+        }
       }
 
       res.writeHead(200);
