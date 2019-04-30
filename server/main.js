@@ -277,17 +277,22 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
       let results = [];
       for (let i = 0; i < exams.length; ++i) {
         let exam = exams[i];
-        if (exam.results) {
-          for (let j = 0; j < exam.results.length; ++j) {
-            if (exam.results[j].studentId == req.params.id) {
-              results.push(exam.results[j]);
-            }
+        let currentResults = [];
+        for (let j = 0; j < exam.results.length; ++j) {
+          if (exam.results[j].studentId == req.params.id) {
+            currentResults.push(exam.results[j]);
           }
         }
+
+        results.push({
+          examId: exam._id,
+          examTitle: exam.title,
+          results: currentResults
+        });
       }
 
       res.writeHead(200);
-      res.end(JSON.stringify(results));
+      res.end(JSON.stringify());
     } else {
       res.writeHead(404);
       res.end('Exam not found');
