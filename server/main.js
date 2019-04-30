@@ -226,6 +226,50 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
       res.end('Exam not found');
     }
   });
+
+  router.post('/attempt', function (req, res, next) {
+    if (req.headers) {
+      let headers = req.headers;
+      if (!headers.student_id ||
+        !headers.student_name ||
+        !headers.exam_id ||
+        !headers.exam_questions) {
+        res.writeHead(400);
+        res.end('Operation needs student_id, student_name, exam_id and exam_questions!');
+        return;
+      }
+
+      let questions = headers.exam_questions;
+      try {
+        questions = JSON.parse(questions);
+        if (typeof questions === 'object' && questions.constructor === Array) {
+          let exam = Exams.findOne({ _id: headers.exam_id });
+          if (exam) {
+            Exams.update({ _id: headers.exam_id }, {
+              $push: {
+                results: {
+                  studentId: headers.student_id,
+                  studentName: headers.student_name,
+                  questions: headers.exam_questions
+                }
+              }
+            });
+            res.writeHead(200);
+            res.end('');
+          } else {
+            res.writeHead(404);
+            res.end("Exam not found");
+          }
+        } else {
+          res.writeHead(400);
+          res.end('exam_questions is not a valid JSON array.');
+        }
+      } catch (e) {
+        res.writeHead(400);
+        res.end('exam_questions is not valid JSON.');
+      }
+    }
+  });
 }));
 
 var examTemplate = {
@@ -243,7 +287,7 @@ var examTemplate = {
   results: [
     { // Student Result Object
       studentId: 'ABCD', // userId for student
-      name: 'Mdohas',
+      studentName: 'Mdohas',
       questions: [
         {
           type: '1',
