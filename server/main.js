@@ -292,7 +292,7 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
       }
 
       res.writeHead(200);
-      res.end(JSON.stringify());
+      res.end(JSON.stringify(results));
     } else {
       res.writeHead(404);
       res.end('Exam not found');
