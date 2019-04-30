@@ -294,6 +294,7 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
             score: score,
             questionCount: resultQuestion.length
           });
+          score = 0;
         }
       }
 
