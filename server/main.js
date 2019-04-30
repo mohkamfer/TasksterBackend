@@ -250,7 +250,7 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
                 results: {
                   studentId: headers.student_id,
                   studentName: headers.student_name,
-                  questions: headers.exam_questions
+                  questions: JSON.parse(headers.exam_questions)
                 }
               }
             });
