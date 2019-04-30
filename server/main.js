@@ -273,9 +273,9 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
 
   router.get('/results/:id', function (req, res, next) {
     let exams = Exams.find({ "questions.results.studentId": req.params.id }).fetch();
-    if (exam) {
-      res.writeHead(JSON.stringify(exams));
-      res.end(JSON.stringify(exam));
+    if (exams) {
+      res.writeHead(200);
+      res.end(JSON.stringify(exams));
     } else {
       res.writeHead(404);
       res.end('Exam not found');
