@@ -278,9 +278,14 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
       for (let i = 0; i < exams.length; ++i) {
         let exam = exams[i];
         if (exam.results) {
-          results.concat(exam.results);
+          for (let j = 0; j < exam.results.length; ++j) {
+            if (exam.results[j].studentId == req.params.id) {
+              results.push(exam.results[j]);
+            }
+          }
         }
       }
+
       res.writeHead(200);
       res.end(JSON.stringify(results));
     } else {
