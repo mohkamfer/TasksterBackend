@@ -305,6 +305,27 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
       res.end('Exam not found');
     }
   });
+
+  router.delete('/exam', function (req, res, next) {
+    if (req.headers) {
+      let headers = req.headers;
+      if (!headers.exam_id) {
+        res.writeHead(400);
+        res.end('Operation needs exam_id!');
+        return;
+      }
+
+      let exam = Exams.findOne({ _id: headers.exam_id });
+      if (exam) {
+        Exams.remove({ _id: headers.exam_id });
+        res.writeHead(200);
+        res.end('Deleted successfully');
+      } else {
+        res.writeHead(404);
+        res.end('Exam not found');
+      }
+    }
+  });
 }));
 
 var examTemplate = {
