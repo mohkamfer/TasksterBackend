@@ -326,6 +326,17 @@ WebApp.connectHandlers.use(connectRoute(function (router) {
       }
     }
   });
+
+  router.get('/attempt/:student/:exam', function (req, res, next) {
+    let exam = Exams.findOne({ _id: req.params.exam, "results.studentId": req.params.student });
+    if (exam) {
+      res.writeHead(200);
+      res.end('');
+    } else {
+      res.writeHead(404);
+      res.end('');
+    }
+  });
 }));
 
 var examTemplate = {
